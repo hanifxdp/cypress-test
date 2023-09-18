@@ -3,8 +3,5 @@ cypress.config.js
 
 /node_modules
 /.github
-/cypress/reports
-/cypress/screenshots
-/cypress/videos
 
 .editorconfig
