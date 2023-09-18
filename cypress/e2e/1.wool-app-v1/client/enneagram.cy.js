@@ -3,7 +3,6 @@ describe(`Enneagram Feature`, () => {
 		let enneagramId = 0;
 		beforeEach(() => {
 			cy.viewport(1920, 1080);
-			// cy.loginBackend({ identifier: "harambe", password: "H@rambe123" });
 			cy.request("POST", `${Cypress.env("api_url")}/auth/sign-in`, {
 				identifier: "harambe",
 				password: "H@rambe123",

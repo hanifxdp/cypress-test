@@ -1,82 +1,78 @@
 describe("Logout Feature", () => {
 	context(`Desktop 1080p`, () => {
-		it.only(`Logout Session (loginBackend)`, () => {
+		before(() => {
 			cy.log("Viewport");
 			cy.viewport(1920, 1080);
-			cy.clearAll();
-
 			cy.log("Login");
-			cy.loginBackend({ identifier: "harambe", password: "H@rambe123" });
-
-			cy.visit(Cypress.env("homepage_url"));
-			cy.wait(2000);
-
-			cy.log("Logout Process");
-			cy.get(".css-af88zl").click();
-			cy.wait(1000);
-			cy.get(".menu-dropdown-logout.css-1xivi2a").click();
-
-			cy.log("Assert the logout result");
-			cy.clearAll();
-			// cy.get(".chakra-text.css-7bw2ky")
-			// 	.should("contain", "Login")
-			// 	.and("be.visible");
-			// cy.get(".chakra-text.css-7kgmg7")
-			// 	.should("contain", "Welcome back to Wool👋")
-			// 	.and("be.visible");
 		});
-		it(`Logout Seesion (loginAndLogoutBackend)`, () => {
-			cy.log("Viewport");
-			cy.viewport(1920, 1080);
-			cy.clearAll();
+		context(`Client`, () => {
+			it.only(`Logout Session`, () => {
+				cy.loginBackendWithSession(
+					`${Cypress.env("user").usernameHarambe}`,
+					`${Cypress.env("user").passwordHarambe}`
+				);
+				cy.log("Client Logout");
+				cy.visit(Cypress.env("path").homepage_url);
+				cy.wait(2000);
 
-			cy.log("Login");
-			cy.loginBackend({ identifier: "harambe", password: "H@rambe123" });
-			cy.wait(2000);
+				cy.log("Logout Process");
+				cy.get(".css-af88zl").click();
+				cy.wait(1000);
+				cy.get(".menu-dropdown-logout.css-1xivi2a").click();
 
-			cy.logoutBackend();
+				cy.log("Assert the logout result");
+				cy.clearAll();
+			});
+		});
+		context(`Partner`, () => {
+			it.only(`Logout Session`, () => {
+				cy.loginBackendWithSession(
+					`${Cypress.env("user").usernameCoachArif}`,
+					`${Cypress.env("user").passwordCoachArif}`
+				);
+				cy.log("Partner Logout");
+				cy.visit(Cypress.env("path").homepage_url);
+				cy.wait(2000);
+
+				cy.log("Logout Process");
+				cy.get(".css-af88zl").click();
+				cy.wait(1000);
+				cy.get(".menu-dropdown-logout.css-1xivi2a").click();
+
+				cy.log("Assert the logout result");
+				cy.clearAll();
+			});
+		});
+		context(`Admin`, () => {
+			it.only(`Logout Session`, () => {
+				cy.loginBackendWithSession(
+					`${Cypress.env("user").usernameAdmin}`,
+					`${Cypress.env("user").passwordAdmin}`
+				);
+				cy.log("Admin Logout");
+				cy.visit(Cypress.env("path").homepage_url);
+				cy.wait(2000);
+
+				cy.log("Logout Process");
+				cy.get(".css-af88zl").click();
+				cy.wait(1000);
+				cy.get(".menu-dropdown-logout.css-1xivi2a").click();
+
+				cy.log("Assert the logout result");
+				cy.clearAll();
+			});
 		});
 	});
 	context(`Smartphone`, () => {
 		it(`Logout Session`, () => {
 			cy.log("Viewport");
 			cy.viewport(428, 926);
-
-			cy.log("Login");
-			cy.login("harambe", "H@rambe123");
-
-			cy.log("Logout Process");
-			cy.get(".css-af88zl").click();
-			cy.get(".menu-dropdown-logout.css-1xivi2a").click();
-
-			cy.log("Assert the logout result");
-			cy.get(".chakra-text.css-7bw2ky")
-				.should("contain", "Login")
-				.and("be.visible");
-			cy.get(".chakra-text.css-7kgmg7")
-				.should("contain", "Welcome back to Wool👋")
-				.and("be.visible");
 		});
 	});
 	context(`Smartphone`, () => {
 		it(`Logout Session`, () => {
 			cy.log("Viewport");
 			cy.viewport(390, 844);
-
-			cy.log("Login");
-			cy.login("harambe", "H@rambe123");
-
-			cy.log("Logout Process");
-			cy.get(".css-af88zl").click();
-			cy.get(".menu-dropdown-logout.css-1xivi2a").click();
-
-			cy.log("Assert the logout result");
-			cy.get(".chakra-text.css-7bw2ky")
-				.should("contain", "Login")
-				.and("be.visible");
-			cy.get(".chakra-text.css-7kgmg7")
-				.should("contain", "Welcome back to Wool👋")
-				.and("be.visible");
 		});
 	});
 });

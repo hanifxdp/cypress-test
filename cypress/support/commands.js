@@ -8,6 +8,8 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+let token;
+
 Cypress.Commands.add("login", (usernameClient, password) => {
 	cy.visit("/auth/login");
 	cy.get("input[placeholder='Email or username']")
@@ -58,17 +60,17 @@ Cypress.Commands.add("subscribe", () => {
 });
 
 Cypress.Commands.add("loginBackend", ({ identifier, password }) => {
-	let roles = "";
 	cy.request(
 		"POST",
-		`${Cypress.env("api_url")}${Cypress.env("path").login_url}`,
+		`${Cypress.env("api_url")}${Cypress.env("path").loginBackend_url}`,
 		{
 			identifier,
 			password,
 		}
 	).then((response) => {
 		const roleUser = response.body.user.role;
-		cy.setCookie("access_token", response.body.access_token);
+		token = response.body.access_token;
+		cy.setCookie("access_token", token);
 		const path = Cypress.env("path").homepage_url;
 		const replacePath = path.replace("[roles]", roleUser);
 		cy.visit(replacePath);
@@ -85,4 +87,59 @@ Cypress.Commands.add("clearAll", () => {
 	cy.clearAllCookies();
 	cy.clearAllLocalStorage();
 	cy.clearAllSessionStorage();
+});
+
+Cypress.Commands.add("", (width, height) => {
+	cy.viewport(width, height);
+});
+
+Cypress.Commands.add("loginUIWithSession", (username, password) => {
+	let cookie;
+	cy.session(
+		[username, password],
+		() => {
+			cy.visit("/auth/login");
+			cy.get("input[placeholder='Email or username']")
+				.type(username)
+				.should("have.value", username);
+			cy.get("input[placeholder='Password']")
+				.type(password)
+				.should("have.value", password);
+			cy.get('button[type="submit"]').click();
+			cy.url().should("contain", "/dashboard");
+			cy.getCookie("access_token")
+				.should("exist")
+				.then((c) => {
+					cookie = c.value;
+				});
+		},
+		{
+			validate() {
+				cy.request({
+					methods: "GET",
+					url: `${Cypress.env("api_url")}/users/me`,
+					headers: {
+						authorization: `bearer ${cookie}`,
+					},
+				})
+					.its("status")
+					.should("eq", 200);
+			},
+		}
+	);
+});
+
+Cypress.Commands.add("loginBackendWithSession", (identifier, password) => {
+	cy.session({ identifier, password }, () => {
+		cy.request({
+			method: "POST",
+			url: `${Cypress.env("api_url")}/auth/sign-in`,
+			body: {
+				identifier,
+				password,
+			},
+		}).then((res) => {
+			cy.setCookie("access_token", res.body.access_token);
+		});
+	});
 });
