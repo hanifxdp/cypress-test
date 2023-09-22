@@ -133,13 +133,14 @@ Cypress.Commands.add("loginBackendWithSession", (identifier, password) => {
 	cy.session({ identifier, password }, () => {
 		cy.request({
 			method: "POST",
-			url: `${Cypress.env("api_url")}/auth/sign-in`,
+			url: `${Cypress.env("back_url")}/auth/sign-in`,
 			body: {
 				identifier,
 				password,
 			},
 		}).then((res) => {
 			cy.setCookie("access_token", res.body.access_token);
+			cy.setCookie("id", `${res.body.user.id}`);
 		});
 	});
 });

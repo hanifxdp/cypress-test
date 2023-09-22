@@ -1,13 +1,16 @@
+// * Test Passed
+
 let userId;
-let access_token;
+let accessToken;
 let resumeId = 0;
 
-const identifier = "tfs123";
-const password = "T@fs123";
+const identifier = "gelosaccount";
+const password = "G3los@ccount";
 
 const option = {
 	method: "POST",
-	url: `${Cypress.env("api_url")}/auth/sign-in`,
+	// url: `${Cypress.env("api_url")}/auth/sign-in`,
+	url: "http://back.wool.id/auth/sign-in",
 	body: {
 		identifier,
 		password,
@@ -16,148 +19,184 @@ const option = {
 
 before(() => {
 	cy.request(option).then((res) => {
+		console.log();
 		userId = res.body.user.id;
-		access_token = res.body.access_token;
+		accessToken = res.body.access_token;
 	});
-	cy.request({
-		method: "PUT",
-		url: `${Cypress.env(
-			"back_url"
-		)}/resumes/${resumeId}/personalInformation`,
-		headers: {
-			authorization: `bearer ${access_token}`,
-		},
-		body: {
-			firstName: "testCoach",
-			lastName: "Baru",
-			phoneNumber: "089123456789",
-			email: "client@wool.id",
-			linkedInUrl: "https://www.linkedin.com/in/rifqi-finaldy/",
-			portofolioUrl: "https://www.linkedin.com/in/rifqi-finaldy/",
-			address: "bandung",
-			summary: "apa aja lah yang penting senang",
-			photoUrl: undefined,
-		},
-	}).then((res) => {
-		cy.log(res.body.id);
-		resumeId = res.body.id;
+});
+describe(`Resume-endpoint`, () => {
+	it(`initialize`, () => {
+		cy.request({
+			method: "PUT",
+			url: `${Cypress.env(
+				"back_url"
+			)}/resumes/${resumeId}/personalInformation`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+			body: {
+				firstName: "gelos",
+				lastName: "Account",
+				phoneNumber: "089123456789",
+				email: "gelosaccount@wool.id",
+				linkedInUrl: "https://www.linkedin.com/in/rifqi-finaldy/",
+				portofolioUrl: "https://www.linkedin.com/in/rifqi-finaldy/",
+				address: "bandung",
+				summary: "apa aja lah yang penting senang",
+				photoUrl: undefined,
+			},
+		}).then((res) => {
+			cy.log(res.body.id);
+			resumeId = res.body.id;
+		});
 	});
-
-	describe(`Resume-endpoint`, () => {
-		it(`resume-get`, () => {
-			cy.request({
-				method: "GET",
-				url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
-				headers: {
-					authorization: `bearer ${access_token}`,
-				},
-			}).then((res) => {
-				cy.log(res);
-			});
+	it(`resume-get`, () => {
+		cy.request({
+			method: "GET",
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+		}).then((res) => {
+			cy.log(res);
 		});
-		it(`experience`, () => {
-			cy.request({
-				method: "PUT",
-				url: `${Cypress.env(
-					"api_url"
-				)}/resumes/${resumeId}/experiences`,
-				headers: {
-					authorization: `bearer ${access_token}`,
-				},
-				body: {
-					experiences: [
-						{
-							companyName: "string",
-							companyLocation: "string",
-							role: "string",
-							startDate: "2023-09-14T00:00:00.000Z",
-							endDate: "2023-09-14T00:00:00.000Z",
-							isCurrent: true,
-							industry: "string",
-							description: "string",
-							docUrl: "string",
-						},
-					],
-				},
-			});
+	});
+	it(`experience`, () => {
+		cy.request({
+			method: "PUT",
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}/experiences`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+			body: {
+				experiences: [
+					{
+						companyName: "wool.id",
+						companyLocation: "kota Bandung",
+						role: "product analyst",
+						startDate: "2023-07-19T00:00:00.000Z",
+						endDate: "2023-09-14T00:00:00.000Z",
+						isCurrent: true,
+						industry: "software house",
+						description: "wool app is a mental health app",
+					},
+				],
+			},
 		});
-		it(`education-endpoint`, () => {
-			cy.request({
-				method: "PUT",
-				url: `${Cypress.env("api_url")}/resumes/${resumeId}/educations`,
-				headers: {
-					authorization: `bearer ${access_token}`,
-				},
-				body: {
-					educations: [
-						{
-							name: "string",
-							level: "string",
-							major: "string",
-							startDate: "2023-09-14T00:00:00.000Z",
-							endDate: "2023-09-14T00:00:00.000Z",
-							isCurrent: true,
-							gpa: "3.00",
-							description: "string",
-							docUrl: "string",
-						},
-					],
-				},
-			});
+	});
+	it(`education-endpoint`, () => {
+		cy.request({
+			method: "PUT",
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}/educations`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+			body: {
+				educations: [
+					{
+						name: "unpad",
+						level: "bachelor degree",
+						major: "computer science",
+						startDate: "2018-08-27T00:00:00.000Z",
+						endDate: "2022-08-31T00:00:00.000Z",
+						isCurrent: false,
+						gpa: "3.99",
+						description: "unpad jatinangor, bukan bandung",
+					},
+				],
+			},
 		});
-		it(`organization-endpoint`, () => {
-			cy.request({
-				method: "PUT",
-				url: `${Cypress.env(
-					"api_url"
-				)}/resumes/${resumeId}/organizations`,
-				headers: {
-					authorization: `bearer ${access_token}`,
-				},
-				body: {
-					organizations: [
-						{
-							name: "string",
-							position: "string",
-							startDate: "2023-09-14T00:00:00.000Z",
-							endDate: "2023-09-14T00:00:00.000Z",
-							description: "string",
-							docUrl: "string",
-						},
-					],
-				},
-			});
+	});
+	it(`organization-endpoint`, () => {
+		cy.request({
+			method: "PUT",
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}/organizations`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+			body: {
+				organizations: [
+					{
+						name: "mafia tanah",
+						position: "Collector",
+						startDate: "2021-08-14T00:00:00.000Z",
+						endDate: "2023-09-14T00:00:00.000Z",
+						description: "gitu weh kerjanya",
+					},
+				],
+			},
 		});
-		it(`additional data`, () => {
-			cy.request({
-				method: "PUT",
-				url: `${Cypress.env(
-					"api_url"
-				)}/resumes/${resumeId}/additionalData`,
-				headers: {
-					authorization: `bearer ${access_token}`,
-				},
-				body: {
-					additionalData: [
-						{
-							name: "string",
-							category: "string",
-							docUrl: "string",
-						},
-					],
-				},
-			});
+	});
+	it(`additional data`, () => {
+		cy.request({
+			method: "PUT",
+			url: `${Cypress.env(
+				"back_url"
+			)}/resumes/${resumeId}/additionalData`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+			body: {
+				additionalData: [
+					{
+						name: "latihan kepalan tangan dengan sangat kuat",
+						category: "tinju",
+					},
+				],
+			},
 		});
-		it(`delelte`, () => {
-			cy.request({
-				method: "DELETE",
-				url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
-				headers: {
-					authorization: `bearer ${access_token}`,
-				},
-			}).then((res) => {
-				cy.log(res.statusCode);
-			});
+	});
+	it(`look at the cv`, () => {
+		cy.request({
+			method: "GET",
+			url: `http://back.wool.id/resumes/${resumeId}
+				`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+			qs: {
+				includeUser: true,
+				includePersonalInformation: true,
+				includeExperiences: true,
+				includeEducations: true,
+				includeOrganizations: true,
+				includeAdditionalData: true,
+				includePercentage: true,
+			},
+		}).then((res) => {
+			console.log(res);
+		});
+	});
+	it.only(`get many`, () => {
+		cy.request({
+			method: "GET",
+			url: `${Cypress.env("back_url")}/resumes`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+			qs: {
+				page: 1,
+				take: 10,
+				orderBy: "createdAt",
+				sortBy: "desc",
+				searchBy: "name",
+				includeUser: true,
+				includePersonalInformation: true,
+			},
+		}).then((res) => {
+			cy.log(res.statusCode);
+			cy.log(res);
+		});
+	});
+	it(`delelte`, () => {
+		cy.request({
+			method: "DELETE",
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+		}).then((res) => {
+			cy.log(res.statusCode);
 		});
 	});
 });
