@@ -2,6 +2,5 @@ cypress.env.json
 cypress.config.js
 
 /node_modules
-/.github
 
 .editorconfig
