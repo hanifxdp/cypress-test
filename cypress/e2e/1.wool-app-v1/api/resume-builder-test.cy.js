@@ -167,7 +167,7 @@ describe(`Resume-endpoint`, () => {
 			console.log(res);
 		});
 	});
-	it.only(`get many`, () => {
+	it(`get many`, () => {
 		cy.request({
 			method: "GET",
 			url: `${Cypress.env("back_url")}/resumes`,
@@ -191,7 +191,7 @@ describe(`Resume-endpoint`, () => {
 			cy.log(res);
 		});
 	});
-	it(`delelte`, () => {
+	it.skip(`delelte`, () => {
 		cy.request({
 			method: "DELETE",
 			url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
@@ -228,7 +228,7 @@ describe(`Resume-endpoint`, () => {
 			expect(res.body.percentage).is.above(20);
 		});
 	});
-	it.only(`change-name`, () => {
+	it(`change-name`, () => {
 		cy.request({
 			method: "PUT",
 			url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
