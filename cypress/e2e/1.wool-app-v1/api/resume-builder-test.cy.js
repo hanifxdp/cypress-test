@@ -167,7 +167,7 @@ describe(`Resume-endpoint`, () => {
 			console.log(res);
 		});
 	});
-	it.only(`get many`, () => {
+	it(`get many`, () => {
 		cy.request({
 			method: "GET",
 			url: `${Cypress.env("back_url")}/resumes`,
@@ -184,11 +184,14 @@ describe(`Resume-endpoint`, () => {
 				includePersonalInformation: true,
 			},
 		}).then((res) => {
-			cy.log(res.statusCode);
+			expect(res.body.data).is.not.null;
+			expect(res.body.data).have.length.above(1);
+			expect(res.body.total).is.a("number");
+			resumeId = res.body.data[0].id;
 			cy.log(res);
 		});
 	});
-	it(`delelte`, () => {
+	it.skip(`delelte`, () => {
 		cy.request({
 			method: "DELETE",
 			url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
@@ -197,6 +200,47 @@ describe(`Resume-endpoint`, () => {
 			},
 		}).then((res) => {
 			cy.log(res.statusCode);
+		});
+	});
+	it(`get-relation`, () => {
+		cy.request({
+			method: "GET",
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}/experiences`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+		}).then((res) => {
+			expect(res.body[0]).is.not.null;
+			expect(res.body[0].id).is.a("number");
+			expect(res.body[0].resumeId).is.a("number");
+			expect(res.body[0].companyName).is.a("string");
+		});
+	});
+	it(`get-percentage`, () => {
+		cy.request({
+			method: "GET",
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}/percentage`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+		}).then((res) => {
+			expect(res.body.percentage).is.a("number");
+			expect(res.body.percentage).is.above(20);
+		});
+	});
+	it(`change-name`, () => {
+		cy.request({
+			method: "PUT",
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+			body: {
+				name: "Harambe Akatsuki",
+			},
+		}).then((res) => {
+			expect(res.body.name).is.a("string");
+			expect(res.body.id).is.eq(resumeId);
 		});
 	});
 });
