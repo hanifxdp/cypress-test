@@ -4,6 +4,7 @@
   "description": "Test using Cypress",
   "main": "index.js",
   "scripts": {
+	"start": "npx cypress run",
     "test": "npx cypress open",
     "test:register": "npx cypress run --spec 'cypress/e2e/1.wool-app-v1/client/register.cy.js'",
     "test:login": "npx cypress run --spec 'cypress/e2e/1.wool-app-v1/client/login.cy.js'"
