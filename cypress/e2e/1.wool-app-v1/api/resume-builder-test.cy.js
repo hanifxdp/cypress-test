@@ -167,7 +167,7 @@ describe(`Resume-endpoint`, () => {
 			console.log(res);
 		});
 	});
-	it(`get many`, () => {
+	it.only(`get many`, () => {
 		cy.request({
 			method: "GET",
 			url: `${Cypress.env("back_url")}/resumes`,
@@ -228,7 +228,7 @@ describe(`Resume-endpoint`, () => {
 			expect(res.body.percentage).is.above(20);
 		});
 	});
-	it(`change-name`, () => {
+	it.only(`change-name`, () => {
 		cy.request({
 			method: "PUT",
 			url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
@@ -239,7 +239,8 @@ describe(`Resume-endpoint`, () => {
 				name: "Harambe Akatsuki",
 			},
 		}).then((res) => {
-			console.log(res.body);
+			expect(res.body.name).is.a("string");
+			expect(res.body.id).is.eq(resumeId);
 		});
 	});
 });
