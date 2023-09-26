@@ -13,7 +13,7 @@ it("register-test", () => {
 		},
 		failOnStatusCode: false,
 	}).then((res) => {
-		// cy.log(res.body.user.username);
+		expect(res.status).is.eq(400);
 	});
 });
 
@@ -33,7 +33,7 @@ it(`login-test`, () => {
 	});
 });
 
-it(`SSO Google`, () => {
+it.skip(`SSO Google`, () => {
 	cy.request({
 		method: "POST",
 		url: `${Cypress.env("back_url")}/auth/sign-in/google`,

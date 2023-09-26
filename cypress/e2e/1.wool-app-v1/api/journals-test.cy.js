@@ -21,7 +21,7 @@ const option = {
 };
 
 describe(`journal-client-endpoint`, () => {
-	context(`Client are`, () => {
+	context(`Client area`, () => {
 		before(() => {
 			cy.loginBackendWithSession(
 				`${Cypress.env("user").usernameHarambe}`,
