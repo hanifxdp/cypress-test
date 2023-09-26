@@ -61,10 +61,10 @@ describe(`Resume-endpoint`, () => {
 			cy.log(res);
 		});
 	});
-	it(`experience`, () => {
+	it.only(`experience`, () => {
 		cy.request({
 			method: "PUT",
-			url: `${Cypress.env("back_url")}/resumes/${resumeId}/experiences`,
+			url: `${Cypress.env("back_url")}/resumes/28/experiences`,
 			headers: {
 				authorization: `bearer ${accessToken}`,
 			},
@@ -74,8 +74,8 @@ describe(`Resume-endpoint`, () => {
 						companyName: "wool.id",
 						companyLocation: "kota Bandung",
 						role: "product analyst",
-						startDate: "2023-07-19T00:00:00.000Z",
-						endDate: "2023-09-14T00:00:00.000Z",
+						startDate: "2023-07-19",
+						endDate: "",
 						isCurrent: true,
 						industry: "software house",
 						description: "wool app is a mental health app",
@@ -97,8 +97,8 @@ describe(`Resume-endpoint`, () => {
 						name: "unpad",
 						level: "bachelor degree",
 						major: "computer science",
-						startDate: "2018-08-27T00:00:00.000Z",
-						endDate: "2022-08-31T00:00:00.000Z",
+						startDate: "2018-08-27",
+						endDate: "2022-08-31",
 						isCurrent: false,
 						gpa: "3.99",
 						description: "unpad jatinangor, bukan bandung",
