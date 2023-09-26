@@ -1,33 +1,40 @@
 // * Test Passed
 
+import { faker } from "@faker-js/faker";
+
 let userId;
-let access_token;
-const identifier = "tfs123";
-const password = "T@fs123";
-const option = {
-	method: "POST",
-	url: `${Cypress.env("back_url")}/auth/sign-in`,
-	body: {
-		identifier,
-		password,
-	},
-};
+let accessToken;
+
+const firstname = faker.person.firstName("male");
+const lastname = faker.person.lastName("male");
+const username = faker.internet.displayName();
+const email = faker.internet.email();
+const password = faker.internet.password({ length: 20, memorable: true });
 
 before(() => {
-	cy.request(option).then((res) => {
+	cy.request({
+		method: "post",
+		url: `${Cypress.env("back_url")}/auth/sign-up`,
+		body: {
+			firstName: firstname,
+			lastName: lastname,
+			username: firstname,
+			email: email,
+			password: password,
+		},
+	}).then((res) => {
+		accessToken = res.body.access_token;
 		userId = res.body.user.id;
-		access_token = res.body.access_token;
-		cy.setCookie("access_token", access_token);
 	});
 });
 
 describe(`Enneagram-endpoint`, () => {
-	it.only(`enneagram-take-test`, () => {
+	it(`enneagram-take-test`, () => {
 		cy.request({
 			method: "POST",
 			url: `${Cypress.env("back_url")}/tests`,
 			headers: {
-				authorization: `bearer ${access_token}`,
+				authorization: `bearer ${accessToken}`,
 			},
 		}).then((res) => {
 			cy.log(res);
@@ -37,8 +44,11 @@ describe(`Enneagram-endpoint`, () => {
 		cy.request({
 			method: "POST",
 			url: `${Cypress.env("back_url")}/tests/finalize`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
 			body: {
-				answer: [
+				answers: [
 					"B",
 					"A",
 					"D",
@@ -189,12 +199,12 @@ describe(`Enneagram-endpoint`, () => {
 			cy.log(res);
 		});
 	});
-	it.only(`enneagram-get-test-result`, () => {
+	it(`enneagram-get-test-result`, () => {
 		cy.request({
 			method: "GET",
 			url: `${Cypress.env("back_url")}/tests/users/${userId}`,
 			headers: {
-				authorization: `bearer ${access_token}`,
+				authorization: `bearer ${accessToken}`,
 			},
 		}).then((res) => {
 			cy.log(res);
