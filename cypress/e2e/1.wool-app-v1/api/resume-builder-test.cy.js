@@ -4,8 +4,8 @@ let userId;
 let accessToken;
 let resumeId = 0;
 
-const identifier = "gelosaccount";
-const password = "G3los@ccount";
+const identifier = `${Cypress.env("user").usernameGelos}`;
+const password = `${Cypress.env("user").passwrodGelos}`;
 
 const option = {
 	method: "POST",
@@ -61,7 +61,7 @@ describe(`Resume-endpoint`, () => {
 			cy.log(res);
 		});
 	});
-	it.only(`experience`, () => {
+	it(`experience`, () => {
 		cy.request({
 			method: "PUT",
 			url: `${Cypress.env("back_url")}/resumes/28/experiences`,

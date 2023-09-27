@@ -1,4 +1,5 @@
 // * Test Passed
+// ? failOnStatusCode is true because the subs is still there.
 
 let accessToken;
 let subsId;

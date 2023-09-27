@@ -1,4 +1,5 @@
 // * Test Passed
+// ? Skipped the client, and admin when changing the status. Because it's already on other page.
 
 let transactionId;
 let accessToken;
