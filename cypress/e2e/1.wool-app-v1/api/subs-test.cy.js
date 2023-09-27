@@ -26,7 +26,7 @@ describe(`subs-test`, () => {
 	it(`get-the-subs`, () => {
 		cy.request({
 			method: "GET",
-			url: "http://back.wool.id/subscriptions",
+			url: `${Cypress.env("back_wool")}/subscriptions`,
 			headers: {
 				authorization: `bearer ${accessToken}`,
 			},
@@ -35,10 +35,10 @@ describe(`subs-test`, () => {
 			expect(res.body.data).to.have.lengthOf(1);
 		});
 	});
-	it.only(`post-the-subs`, () => {
+	it(`post-the-subs`, () => {
 		cy.request({
 			method: "POST",
-			url: "http://back.wool.id/subscriptions",
+			url: `${Cypress.env("back_wool")}/subscriptions`,
 			headers: {
 				authorization: `bearer ${accessToken}`,
 			},
@@ -54,7 +54,7 @@ describe(`subs-test`, () => {
 	it(`active-subs-test`, () => {
 		cy.request({
 			method: "GET",
-			url: "http://back.wool.id/subscriptions/active",
+			url: `${Cypress.env("back_wool")}/subscriptions/active`,
 			headers: {
 				authorization: `bearer ${accessToken}`,
 			},
@@ -68,7 +68,7 @@ describe(`subs-test`, () => {
 	it(`latest-subs-test`, () => {
 		cy.request({
 			method: "GET",
-			url: "http://back.wool.id/subscriptions/latest",
+			url: `${Cypress.env("back_wool")}/subscriptions/latest`,
 			headers: {
 				authorization: `bearer ${accessToken}`,
 			},
@@ -77,7 +77,7 @@ describe(`subs-test`, () => {
 	it(`latest-subs-getId-test`, () => {
 		cy.request({
 			method: "GET",
-			url: `http://back.wool.id/subscriptions/${subsId}`,
+			url: `${Cypress.env("back_wool")}/subscriptions/${subsId}`,
 			headers: {
 				authorization: `bearer ${accessToken}`,
 			},
