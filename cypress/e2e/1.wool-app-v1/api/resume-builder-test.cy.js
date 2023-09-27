@@ -5,7 +5,7 @@ let accessToken;
 let resumeId = 0;
 
 const identifier = `${Cypress.env("user").usernameGelos}`;
-const password = `${Cypress.env("user").passwrodGelos}`;
+const password = `${Cypress.env("user").passwordGelos}`;
 
 const option = {
 	method: "POST",
