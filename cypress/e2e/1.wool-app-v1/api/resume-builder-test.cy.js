@@ -64,7 +64,7 @@ describe(`Resume-endpoint`, () => {
 	it(`experience`, () => {
 		cy.request({
 			method: "PUT",
-			url: `${Cypress.env("back_url")}/resumes/28/experiences`,
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}/experiences`,
 			headers: {
 				authorization: `bearer ${accessToken}`,
 			},
@@ -191,17 +191,6 @@ describe(`Resume-endpoint`, () => {
 			cy.log(res);
 		});
 	});
-	it.skip(`delelte`, () => {
-		cy.request({
-			method: "DELETE",
-			url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
-			headers: {
-				authorization: `bearer ${accessToken}`,
-			},
-		}).then((res) => {
-			cy.log(res.statusCode);
-		});
-	});
 	it(`get-relation`, () => {
 		cy.request({
 			method: "GET",
@@ -241,6 +230,17 @@ describe(`Resume-endpoint`, () => {
 		}).then((res) => {
 			expect(res.body.name).is.a("string");
 			expect(res.body.id).is.eq(resumeId);
+		});
+	});
+	it(`delelte`, () => {
+		cy.request({
+			method: "DELETE",
+			url: `${Cypress.env("back_url")}/resumes/${resumeId}`,
+			headers: {
+				authorization: `bearer ${accessToken}`,
+			},
+		}).then((res) => {
+			cy.log(res.statusCode);
 		});
 	});
 });
