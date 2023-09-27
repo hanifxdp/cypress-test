@@ -62,7 +62,7 @@ Cypress.Commands.add("subscribe", () => {
 Cypress.Commands.add("loginBackend", ({ identifier, password }) => {
 	cy.request(
 		"POST",
-		`${Cypress.env("api_url")}${Cypress.env("path").loginBackend_url}`,
+		`${Cypress.env("back_url")}${Cypress.env("path").loginBackend_url}`,
 		{
 			identifier,
 			password,
