@@ -1,6 +1,9 @@
+// * Test Passed
+// ? Not using expected
+
 describe("Logout Feature", () => {
 	context(`Desktop 1080p`, () => {
-		before(() => {
+		beforeEach(() => {
 			cy.log("Viewport");
 			cy.viewport(1920, 1080);
 			cy.log("Login");
