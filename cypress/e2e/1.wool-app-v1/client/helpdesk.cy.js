@@ -1,9 +1,1 @@
-describe(`helpdesk Feature`, ()=>{
-    beforeEach(()=>{
-        cy.login();
-        cy.visit('/helpdesk');
-    })
-    it(`(+)Verify that user can view the frequently aksed question`, ()=>{
-
-    })
-})
+// TODO : NEED TO DEVELOP THE HELP DESK FIRST THEN CAN BE TEST

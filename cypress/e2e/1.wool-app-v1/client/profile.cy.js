@@ -1,3 +1,8 @@
+// * Test Passed
+// ? Change password skipped, and not yet all the cases is developed
+
+import { faker } from "@faker-js/faker";
+
 let cookie;
 let firstName;
 let respBody;
@@ -5,7 +10,7 @@ let respBody;
 describe("Profile Feature", () => {
 	context(`Desktop 1080p`, () => {
 		context("Client", () => {
-			before(() => {
+			beforeEach(() => {
 				cy.viewport(1920, 1080);
 				cy.loginBackendWithSession(
 					`${Cypress.env("user").usernameHarambe}`,
@@ -20,42 +25,47 @@ describe("Profile Feature", () => {
 				cy.wait(2000);
 				cy.get(".css-af88zl").click();
 				cy.contains("My Profile").click();
-				cy.get(".css-dfdtq4").should("contain", "Profile");
 			});
 			it(`View Profile`, () => {
+				cy.get(".css-dfdtq4").should("contain", "Profile");
 				cy.request({
 					method: "GET",
-					url: `${Cypress.env("api_url")}/users/me`,
+					url: `${Cypress.env("back_url")}/users/me`,
 					headers: {
 						authorization: `bearer ${cookie}`,
 					},
 				}).then((res) => {
+					console.log(res);
 					respBody = res.body;
 					cy.get(".css-1qwnwpn").contains(
 						respBody.firstName + " " + respBody.lastName
 					);
 				});
 			});
-			it.skip(`Edit profile`, () => {
-				cy.get(`input[placeholder='Username']`)
-					.invoke("text")
-					.as("usernameText");
-				cy.get("@usernameText").then((username) => {
-					cy.get(`.chakra-text.css-1ayejpo`).should(
-						"have.text",
-						username
-					);
-				});
-				cy.get(`input[placeholder='First name']`).type(firstName);
+			it(`Edit profile`, () => {
+				cy.get(`input[placeholder='First name']`).clear();
+				cy.get(`input[placeholder='First name']`).type(
+					faker.person.firstName("male")
+				);
+				cy.get(`input[placeholder='Last name']`).clear();
+				cy.get(`input[placeholder='Last name']`).type(
+					faker.person.lastName("female")
+				);
+				cy.get(".css-1vbta7t").click();
+				cy.get("#toast-1-title").should("contain", "Success");
+				cy.get("#toast-1-description").should(
+					"contain",
+					"Profile updated"
+				);
 			});
 			it.skip(`Change password`, () => {});
 		});
 		context(`Coach`, () => {
-			before(() => {
+			beforeEach(() => {
 				cy.viewport(1920, 1080);
 				cy.loginBackendWithSession(
-					`${Cypress.env("user").usernameCoachArif}`,
-					`${Cypress.env("user").passwordCoachArif}`
+					`${Cypress.env("user").usernameHanif}`,
+					`${Cypress.env("user").passwordHanif}`
 				);
 				cy.getCookie("access_token")
 					.should("exist")
@@ -71,7 +81,7 @@ describe("Profile Feature", () => {
 			it(`View profile`, () => {
 				cy.request({
 					method: "GET",
-					url: `${Cypress.env("api_url")}/users/me`,
+					url: `${Cypress.env("back_url")}/users/me`,
 					headers: {
 						authorization: `bearer ${cookie}`,
 					},
@@ -81,6 +91,22 @@ describe("Profile Feature", () => {
 						respBody.firstName + " " + respBody.lastName
 					);
 				});
+			});
+			it(`Edit profile`, () => {
+				cy.get(`input[placeholder='First name']`).clear();
+				cy.get(`input[placeholder='First name']`).type(
+					faker.person.firstName("male")
+				);
+				cy.get(`input[placeholder='Last name']`).clear();
+				cy.get(`input[placeholder='Last name']`).type(
+					faker.person.lastName("female")
+				);
+				cy.get(".css-1vbta7t").click();
+				cy.get("#toast-1-title").should("contain", "Success");
+				cy.get("#toast-1-description").should(
+					"contain",
+					"Profile updated"
+				);
 			});
 		});
 	});

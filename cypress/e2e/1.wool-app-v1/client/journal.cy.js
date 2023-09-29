@@ -1,20 +1,19 @@
+// * Test Passed
+// ? Skipped the (-) test cases
+
+import { faker } from "@faker-js/faker";
+
 describe(`Journal Feature`, () => {
 	context("Desktop", () => {
 		context(`Client Area`, () => {
 			beforeEach(() => {
 				cy.viewport(1920, 1080);
 				cy.loginBackend({
-					identifier: "harambe",
-					password: "H@rambe123",
+					identifier: `${Cypress.env("user").usernameHarambe}`,
+					password: `${Cypress.env("user").passwordHarambe}`,
 				});
 				cy.get(".css-2us6ol > :nth-child(2)").click();
 				cy.get(".css-12tf880").should("contain", "Journal");
-			});
-			it.skip(`(-)Verify that user cannot view list of journal / Empty journal`, () => {
-				cy.get(".swiper-slide-active > .css-oq0257").should(
-					"be.visible"
-				);
-				cy.get(".css-1rmcjji").should("have.text", "Journal");
 			});
 			it(`(+)Verify that user can view list of journal`, () => {
 				cy.get(".css-qvu1wo")
@@ -78,19 +77,20 @@ describe(`Journal Feature`, () => {
 			it(`(+)Verify that user can add the journal`, () => {
 				cy.wait(1000);
 				cy.get(".css-rlhbmu > .chakra-button").click();
-				cy.request(
-					"GET",
-					`${Cypress.env("jsonPlaceholder_url")}/posts/1`
-				).then((response) => {
-					const resBody = response.body;
-					cy.get("#title").type(resBody.title);
-					cy.get("#description").type(resBody.body);
-				});
-				cy.get(".css-7asiyc > .chakra-button");
+				cy.get("select[name='category']").select(
+					faker.helpers.rangeToNumber({ min: 1, max: 16 })
+				);
+				cy.get("#title").type("QA Test - " + faker.lorem.sentence(5));
+				cy.get("#description").type(faker.lorem.paragraph(15));
+				cy.get(".css-7asiyc > .chakra-button").click();
+				cy.get("#toast-1-title").should("contain", "Success");
+				cy.get("#toast-1-description").should(
+					"contain",
+					"Journal Created"
+				);
 			});
-			it.skip(`(-)Verify that user cannot add the journal`, () => {});
 			it(`(+)Verify that user can view journal detail`, () => {
-				cy.get(":nth-child(1) > .css-196uhej").click();
+				cy.get(":nth-child(1) > .css-174kbus").click();
 				cy.log("Asserting the detail journal");
 				cy.get(".css-1b125b4").should("not.be.NaN");
 				cy.get(".css-1wfhuvd").should("not.be.NaN");
@@ -98,20 +98,12 @@ describe(`Journal Feature`, () => {
 				cy.get(".css-9b6r1s").should("not.be.NaN");
 			});
 			it(`(+)Verify that user can disscuss journal with user's coach`, () => {
-				cy.get(":nth-child(1) > .css-196uhej").click();
+				cy.get(":nth-child(1) > .css-174kbus").click();
 				cy.wait(1000);
-				cy.request(
-					"GET",
-					`${Cypress.env("jsonPlaceholder_url")}/posts/1`
-				).then((response) => {
-					const respBody = response.body;
-					cy.get("input[placeholder='Write Comment']").type(
-						respBody[1].title,
-						{
-							force: true,
-						}
-					);
-				});
+				cy.get("input[placeholder='Write Comment']").type(
+					"QA Test - " + faker.lorem.sentence(3),
+					{ force: true }
+				);
 				cy.get(".chakra-input__right-element > .chakra-text").click({
 					force: true,
 				});
@@ -120,7 +112,9 @@ describe(`Journal Feature`, () => {
 					"contain",
 					"Comment Created"
 				);
-
+			});
+			it("delete the comment", () => {
+				cy.get(":nth-child(1) > .css-174kbus").click();
 				cy.log("Delete Comment");
 				cy.get(`[aria-haspopup="menu"]`).click({ multiple: true });
 				cy.contains("Delete Comment").click({ force: true });
@@ -130,17 +124,24 @@ describe(`Journal Feature`, () => {
 					"Comment Deleted"
 				);
 			});
+			it.skip(`(-)Verify that user cannot add the journal`, () => {});
+			it.skip(`(-)Verify that user cannot view list of journal / Empty journal`, () => {
+				cy.get(".swiper-slide-active > .css-oq0257").should(
+					"be.visible"
+				);
+				cy.get(".css-1rmcjji").should("have.text", "Journal");
+			});
 		});
 		context(`Coach Area`, () => {
-			before(() => {
+			beforeEach(() => {
 				cy.viewport(1920, 1080);
 				cy.loginBackendWithSession(
-					`${Cypress.env("user").usernameCoachArif}`,
-					`${Cypress.env("user").passwordCoachArif}`
+					`${Cypress.env("user").usernameHanif}`,
+					`${Cypress.env("user").passwordHanif}`
 				);
 				cy.visit("/");
 				cy.wait(2000);
-				cy.get(".css-2us6ol > :nth-child(1)").click();
+				cy.get(".css-2us6ol > :nth-child(2)").click();
 				cy.get(".chakra-text.css-12tf880").should("contain", "Journal");
 			});
 			it("look  the journal list", () => {
@@ -150,23 +151,20 @@ describe(`Journal Feature`, () => {
 					.and("have.length.greaterThan", 1);
 			});
 			it("look the detail of the journal list", () => {
-				cy.get(":nth-child(1) > .css-196uhej").click();
+				cy.get(":nth-child(1) > .css-174kbus").click();
 			});
 			it(`comment the journal`, () => {
-				cy.get(":nth-child(1) > .css-196uhej").click();
+				cy.get(":nth-child(1) > .css-174kbus").click();
 				cy.wait(1000);
-				cy.request(
-					"GET",
-					`${Cypress.env("jsonPlaceholder_url")}/posts/1`
-				).then((response) => {
-					const respBody = response.body;
-					cy.get("input[placeholder='Write Comment']").type(
-						respBody[1].title,
-						{
-							force: true,
-						}
-					);
+				cy.get(".chakra-input__right-element > .chakra-text").click({
+					force: true,
 				});
+				cy.get("input[placeholder='Write Comment']").type(
+					"QA Test - " + faker.lorem.sentence(3),
+					{
+						force: true,
+					}
+				);
 				cy.get(".chakra-input__right-element > .chakra-text").click({
 					force: true,
 				});
@@ -178,6 +176,7 @@ describe(`Journal Feature`, () => {
 			});
 			it("delete the journal comment", () => {
 				cy.log("Delete Comment");
+				cy.get(":nth-child(1) > .css-174kbus").click();
 				cy.get(`[aria-haspopup="menu"]`).click({ multiple: true });
 				cy.contains("Delete Comment").click({ force: true });
 				cy.get("#toast-1-title").should("contain", "Success");

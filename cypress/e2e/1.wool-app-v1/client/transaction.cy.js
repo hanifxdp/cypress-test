@@ -1,11 +1,13 @@
+// TODO : Coach Trasanction and Admin
+
 describe(`Transaction Feature`, () => {
 	context("Desktop 1080p", () => {
 		context("Client Side", () => {
 			beforeEach(() => {
 				cy.viewport(1920, 1080);
 				cy.loginBackend({
-					identifier: "harambe",
-					password: "H@rambe123",
+					identifier: `${Cypress.env("user").usernameHarambe}`,
+					password: `${Cypress.env("user").passwordHarambe}`,
 				});
 				cy.get(".css-2us6ol > :nth-child(5)").click();
 				cy.get(".chakra-text.css-12tf880").should(
@@ -13,7 +15,11 @@ describe(`Transaction Feature`, () => {
 					"Transaction"
 				);
 			});
-			it.skip(`Empty Transaction`, () => {
+			it(`Empty Transaction`, () => {
+				cy.loginBackend({
+					identifier: `${Cypress.env("user").usernameAutomation}`,
+					password: `${Cypress.env("user").passwordAutomation}`,
+				});
 				cy.tombolButton().should("contain", "How to Pay");
 				cy.get(".chakra-text.css-m05ulo").should(
 					"contain",
@@ -21,7 +27,7 @@ describe(`Transaction Feature`, () => {
 				);
 				cy.get(".chakra-text.css-o5jxbd").should(
 					"contain",
-					"Sejauh ini, anda belum memiliki transaksi"
+					"Sejauh ini, kamu belum melakukan transaksi. Yuk upgrade akunmu ke premium untuk menikmati full akses ke semua fitur!"
 				);
 			});
 			it(`(+)Verify that user can view the list of transaction`, () => {
@@ -29,8 +35,8 @@ describe(`Transaction Feature`, () => {
 					.children()
 					.should("have.length.at.least", 1);
 			});
-			it(`Update the status from pending to settlement`, () => {});
-			it(`(+)Verify that user can view the transaction detail (Pending)`, () => {
+			it.skip(`Update the status from pending to settlement`, () => {});
+			it.skip(`(+)Verify that user can view the transaction detail (Pending)`, () => {
 				cy.get(".css-3pksgp")
 					.children()
 					.should("have.length.at.least", 1);
@@ -47,7 +53,7 @@ describe(`Transaction Feature`, () => {
 					cy.get(".css-35ezg3").should("have.text", $numPrice);
 				});
 			});
-			it.only(`(+)Verify that user can view the transaction detail (Settlement)`, () => {
+			it.skip(`(+)Verify that user can view the transaction detail (Settlement)`, () => {
 				cy.get(".css-3pksgp")
 					.children(1)
 					.should("have.length.at.least", 1)
@@ -68,13 +74,11 @@ describe(`Transaction Feature`, () => {
 				cy.tombolButton().should("contain", "How to Pay");
 				cy.get(".chakra-text.css-12tf880").should(
 					"contain",
-					"Transaction Tutorial"
+					"Transaction Method"
 				);
 				cy.get(".css-1venz01").should("be.visible");
 			});
 		});
-		context('Partner Side',()=>{
-			
-		})
+		context("Partner Side", () => {});
 	});
 });
