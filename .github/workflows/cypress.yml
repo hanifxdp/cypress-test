@@ -22,4 +22,4 @@ jobs:
                   # in GitHub repo → Settings → Secrets → Actions
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_SECRET_KEY }}
                   # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: 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
